@@ -22,7 +22,7 @@ provider "aws" {
 
     default_tags {
         tags = {
-            Project     = "image-processor"
+            Project     = "procesador-imagenes"
             Environment = var.environment
             ManagedBy   = "terraform"
         }
@@ -51,7 +51,7 @@ variable "environment" {
 variable "project_name" {
     description = "Nombre del proyecto"
     type = string
-    default = "image-processor"
+    default = "procesador-imagenes"
 }
 
 locals {
@@ -106,18 +106,18 @@ module "lambda_upload" {
 }
 
 module "lambda_crop" {
-    source             = "./modules/lambda"
-    prefix             = local.prefix
-    function_name      = "crop"
-    handler            = "index.handler"
-    runtime            = "python3.12"
-    memory_size        = 512
-    timeout            = 60
-    source_dir         = "${path.module}/lambdas/crop"
-    role_arn           = module.iam.crop_role_arn
-    subnet_ids         = module.vpc.private_subnet_ids
+    source = "./modules/lambda"
+    prefix = local.prefix
+    function_name = "crop"
+    handler = "index.handler"
+    runtime = "python3.12"
+    memory_size = 512
+    timeout = 60
+    source_dir = "${path.module}/lambdas/crop"
+    role_arn = module.iam.crop_role_arn
+    subnet_ids = module.vpc.private_subnet_ids
     security_group_ids = [module.vpc.crop_sg_id]
-    layers             = ["arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p312-Pillow:4"]
+    layers = ["arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p312-Pillow:11"]
 
     environment_variables = {
         S3_BUCKET = module.s3.bucket_id
